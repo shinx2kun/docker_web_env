@@ -1,6 +1,0 @@
-# Nginxの公式image
-FROM nginx:latest
-
-RUN rm /etc/nginx/conf.d/default.conf
-COPY default.nginx.conf /etc/nginx/conf.d
-
