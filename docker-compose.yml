@@ -34,8 +34,6 @@ services:
 
 
 
-# test
-
 
 networks:
   backend_network:
