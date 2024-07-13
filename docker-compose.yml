@@ -33,10 +33,10 @@ services:
 
 
 
-  web-front:
+  web_front:
     image: node:18.19.0
     volumes:
-      - ./frontend/web-front:/home/app/frontend
+      - ./frontend/web_front:/home/app/frontend
     ports:
       - 3000:3000
     working_dir: /home/app/frontend
