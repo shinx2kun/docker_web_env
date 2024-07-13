@@ -13,6 +13,8 @@ COPY requirements.txt ./
 RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
+
+
 # Gunicornの実行
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
 

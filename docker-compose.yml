@@ -1,14 +1,14 @@
 version: "3.7"
 
 services:
-  web_app:
-    container_name: web_app
-    env_file: ./backend/web_app/.env
+  web_back:
+    container_name: web_back
+    env_file: ./backend/web_back/.env
     build:
-      context: ./backend/web_app/.
-      dockerfile: Dockerfile.web_app
+      context: ./backend/web_back/.
+      dockerfile: Dockerfile.web_back
     volumes:
-      - ./backend/web_app:/code/
+      - ./backend/web_back:/code/
       - static_volume:/code/staticfiles # <-- bind the static volume
     stdin_open: true
     tty: true
@@ -20,12 +20,11 @@ services:
     #   - DJANGO_SETTINGS_MODULE=config.local_settings
     # depends_on:
     #   - db
-
-  nginx:
-    container_name: nginx
+  nginx_back:
+    container_name: nginx_back
     build:
-      context: ./backend/nginx/.
-      dockerfile: Dockerfile.nginx
+      context: ./backend/nginx_back/.
+      dockerfile: Dockerfile.nginx_back
     ports:
       - "8080:80"
     networks:
@@ -34,9 +33,32 @@ services:
 
 
 
+  web-front:
+    image: node:18.19.0
+    volumes:
+      - ./frontend/web-front:/home/app/frontend
+    ports:
+      - 3000:3000
+    working_dir: /home/app/frontend
+    command: [bash, -c, yarn upgrade --no-progress --network-timeout 1000000 && yarn run dev]
+    networks:
+      - frontend_network
+  nginx_front:
+    container_name: nginx_frontend
+    build:
+      context: ./frontend/nginx_front/.
+      dockerfile: Dockerfile.nginx_front
+    ports:
+      - "80:80"
+    depends_on:
+      - web_front
+    networks:
+      - frontend_network
 
 networks:
   backend_network:
+    driver: bridge
+  frontend_network:
     driver: bridge
 volumes:
   static_volume:
