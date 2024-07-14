@@ -1,0 +1,8 @@
+FROM mysql:8.4.1
+
+RUN echo "USE mysql;" > /docker-entrypoint-initdb.d/timezones.sql &&  mysql_tzinfo_to_sql /usr/share/zoneinfo >> /docker-entrypoint-initdb.d/timezones.sql
+
+RUN mkdir /var/log/mysql
+RUN chown mysql:mysql /var/log/mysql
+
+COPY ./my.cnf /etc/mysql/conf.d/my.cnf

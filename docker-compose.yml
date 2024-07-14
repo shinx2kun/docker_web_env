@@ -15,11 +15,12 @@ services:
     networks:
       - backend_network
     command: gunicorn --bind :8000 config.wsgi:application
-    # environment:
-    #   - CHOKIDAR_USEPOLLING=true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - DJANGO_SETTINGS_MODULE=config.settings
     #   - DJANGO_SETTINGS_MODULE=config.local_settings
-    # depends_on:
-    #   - db
+    depends_on:
+      - mysql
   nginx_back:
     container_name: nginx_back
     build:
@@ -29,9 +30,6 @@ services:
       - "8080:80"
     networks:
       - backend_network
-    tty: true
-
-
 
   web_front:
     image: node:18.19.0
@@ -55,6 +53,26 @@ services:
     networks:
       - frontend_network
 
+  mysql:
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile.mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: procedureManual
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - ./mysql_volume:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - backend_network
+
+
 networks:
   backend_network:
     driver: bridge
@@ -62,3 +80,5 @@ networks:
     driver: bridge
 volumes:
   static_volume:
+  # mysql_volume:
+

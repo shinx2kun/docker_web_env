@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,13 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # 3rd party
+    'corsheaders',
+    # local
+   'procedureManual.apps.ProceduremanualConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -85,7 +91,7 @@ DATABASES = {
         'NAME': 'procedureManual',
         'USER': 'user',
         'PASSWORD': 'password',
-        'HOST': 'db',
+        'HOST': 'mysql',
         'PORT': '3306',
     }
 }
@@ -113,11 +119,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
+
+USE_L10N = True
 
 USE_TZ = True
 
@@ -131,3 +139,28 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 開発環境下で静的ファイルを参照する先
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # 追加
+
+# 本番環境で静的ファイルを参照する先
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # 追加
+
+# メディアファイルpath
+MEDIA_URL = '/media/' # 追加
+
+# 追加
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.AllowAny',
+#     ]
+# }
+
+CSRF_TRUSTED_ORIGINS = (
+    'http://localhost',
+),
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost',
+),
+
+# CSRF_FAILURE_VIEW='procedureManual.views.csrf_failure'
