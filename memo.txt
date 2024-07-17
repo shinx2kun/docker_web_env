@@ -2,8 +2,16 @@
 https://qiita.com/greenteabiscuit/items/c40ba038703c9f33499b
 
 ◼️ 初期構築に必要なコマンド
-docker-compose run --rm web_app sh -c "django-admin startproject config ."
-docker-compose run --rm web_app sh -c "python manage.py startapp todo"
+docker exec -it web_back bashにて以下のコマンドが必要
+--- gitにプロジェクトやアプリが作成されていない時
+django-admin startproject config .
+python manage.py startapp todo
+--- その後に必要な作業(これは最初の人が一度だけ実施すれば、その後他の人はgitのファイルとれば不要)
+python manage.py makemigrations
+python manage.py migrate
+python manage.py collectstatic
+python manage.py createsuperuser
+
 
 ◼️ env
 
@@ -45,8 +53,14 @@ docker-compose stop
 ・コンテナ削除
 docker rm コンテナ名orコンテナID
 
+・コンテナ全消去
+docker rm $(docker ps -aq)
+
 ・image削除
 docker rmi イメージID 
+
+・image全消去
+docker rmi $(docker images -q)
 
 ・コンテナ一覧の表示
 docker-compose ps
@@ -62,4 +76,5 @@ docker logs
 ・コンテナアクセス
 docker exec -it コンテナ名 bash
 
-test again
+
+

@@ -1,0 +1,5 @@
+FROM node:14.13.1
+
+RUN bash -c yarn upgrade --no-progress --network-timeout 1000000
+# RUN yarn run dev
+

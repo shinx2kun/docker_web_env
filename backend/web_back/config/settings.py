@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +26,7 @@ SECRET_KEY = 'django-insecure-+l=xp3d#ty=d@l8(+l+*olqb=6kn48$$i6v5!q9op*lv7a%_qo
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*']
@@ -41,8 +43,9 @@ INSTALLED_APPS = [
     
     # 3rd party
     'corsheaders',
+    'graphene_django',
     # local
-   'procedureManual.apps.ProceduremanualConfig',
+    'procedureManual.apps.ProceduremanualConfig',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +56,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+GRAPHQL_JWT = {
+    "JWT_VERIFY_EXPIRATION": True,
+    # tokenが60分有効
+    "JWT_EXPIRATION_DELTA": timedelta(minutes=60),
+    # "JWT_EXPIRATION_DELTA": timedelta(minutes=1),
+}
 
 ROOT_URLCONF = 'config.urls'
 
@@ -96,6 +107,18 @@ DATABASES = {
     }
 }
 
+GRAPHENE = {
+    # "SCHEMA": "employees.schema.schema",
+    # "MIDDLEWARE": [
+    #     "graphql_jwt.middleware.JSONWebTokenMiddleware",
+    # ],
+}
+
+AUTHENTICATION_BACKENDS = [
+    "graphql_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -133,7 +156,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -141,13 +166,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # 開発環境下で静的ファイルを参照する先
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # 追加
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # 追加
 
 # 本番環境で静的ファイルを参照する先
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # 追加
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # メディアファイルpath
-MEDIA_URL = '/media/' # 追加
+MEDIA_URL = '/media/'
 
 # 追加
 # REST_FRAMEWORK = {
@@ -156,11 +181,14 @@ MEDIA_URL = '/media/' # 追加
 #     ]
 # }
 
-CSRF_TRUSTED_ORIGINS = (
+CSRF_TRUSTED_ORIGINS = [
     'http://localhost',
-),
-CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8080',
+]
+CORS_ORIGIN_WHITELIST = [
     'http://localhost',
-),
+    'http://localhost:8080',
+]
+
 
 # CSRF_FAILURE_VIEW='procedureManual.views.csrf_failure'

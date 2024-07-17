@@ -1,8 +1,9 @@
 # Nginxの公式image
-FROM nginx:latest
+FROM nginx:1.27.0
 
 # nodeとnpmのinstall
 # RUN apt install -y nodejs npm
+# RUN apk add --no-cache bash
 
 COPY wait.sh /wait.sh
 

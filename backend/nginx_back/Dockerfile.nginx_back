@@ -1,5 +1,5 @@
 # Nginxの公式image
-FROM nginx:latest
+FROM nginx:1.27.0
 
 RUN rm /etc/nginx/conf.d/default.conf
 COPY default.nginx_back.conf /etc/nginx/conf.d
