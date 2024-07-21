@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
             name='Site',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('site_name', models.CharField(max_length=200)),
+                ('site', models.CharField(max_length=200)),
             ],
         ),
         migrations.CreateModel(

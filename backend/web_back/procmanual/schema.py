@@ -14,7 +14,7 @@ class ProcmanualNode(DjangoObjectType):
         # 検索時のフィルター設定
         filter_fields = {
             "title": ['icontains'],
-            'site__site_name': ['icontains'],
+            'site__site': ['icontains'],
             'rank__rank': ['icontains'],
             # 'check_cmd': ['icontains'],
             'created_date': ['icontains'],
@@ -27,7 +27,7 @@ class SiteNode(DjangoObjectType):
         model = Site
         filter_fields = {
             'procmanual': ['exact'],
-            'site_name': ['exact'],
+            'site': ['exact'],
         }
         interfaces = (relay.Node,)
 
@@ -40,35 +40,31 @@ class RankNode(DjangoObjectType):
         }
         interfaces = (relay.Node,)
 
+
 class Query(graphene.ObjectType):
     procmanual = graphene.Field(ProcmanualNode, id=graphene.NonNull(graphene.ID))
     all_procmanuals = DjangoFilterConnectionField(ProcmanualNode)
-
     site = graphene.Field(SiteNode, id=graphene.NonNull(graphene.ID))
-    all_site = DjangoFilterConnectionField(SiteNode)
-
+    all_sites = DjangoFilterConnectionField(SiteNode)
     rank = graphene.Field(RankNode, id=graphene.NonNull(graphene.ID))
-    all_rank = DjangoFilterConnectionField(RankNode)
-
+    all_ranks = DjangoFilterConnectionField(RankNode)
     def resolve_procmanual(self, info, **kwargs):
         id = kwargs.get("id")
         if id is not None:
             return Procmanual.objects.get(id=from_global_id(id)[1])
     def resolve_all_procmanuals(self, info, **kwargs):
         return Procmanual.objects.all()
-
     def resolve_site(self, info, **kwargs):
         id = kwargs.get("id")
         if id is not None:
             return Site.objects.get(id=from_global_id(id)[1])
-    def resolve_all_site(self, info, **kwargs):
-        return Site.objects.all()
-            
+    def resolve_all_sites(self, info, **kwargs):
+        return Site.objects.all()      
     def resolve_rank(self, info, **kwargs):
         id = kwargs.get("id")
         if id is not None:
             return Rank.objects.get(id=from_global_id(id)[1])
-    def resolve_all_rank(self, info, **kwargs):
+    def resolve_all_ranks(self, info, **kwargs):
         return Rank.objects.all()
 
 
@@ -79,7 +75,6 @@ class ProcmanualCreateMutation(relay.ClientIDMutation):
         rank = graphene.ID(required=True)
         # check_cmd = graphene.List(graphene.String)
     procmanual = graphene.Field(ProcmanualNode)
-
     # @login_required
     def mutate_and_get_payload(root, info, **input):
         site_id = from_global_id(input.get('site'))[1]
@@ -97,13 +92,12 @@ class ProcmanualCreateMutation(relay.ClientIDMutation):
 class ProcmanualUpdateMutation(relay.ClientIDMutation):
     class Input:
         id = graphene.ID(required=True) 
-        title = graphene.String(required=True) 
+        title = graphene.String(required=True)
         site = graphene.ID(required=True)
         rank = graphene.ID(required=True)
         created_date = graphene.DateTime(required=True)
         # check_cmd = graphene.List(graphene.String, required=True)
-    procmanual = graphene.Field(ProcmanualNode)
-    
+    procmanual = graphene.Field(ProcmanualNode)   
     # @login_required
     def mutate_and_get_payload(root, info, **input):
         site_id = from_global_id(input.get('site'))[1]
@@ -121,13 +115,10 @@ class ProcmanualUpdateMutation(relay.ClientIDMutation):
         procmanual.save()
         return ProcmanualUpdateMutation(procmanual=procmanual)
 
-
 class ProcmanualDeleteMutation(relay.ClientIDMutation):
     class Input:
         id = graphene.ID(required=True)
-
     procmanual = graphene.Field(ProcmanualNode)
-
     # @login_required
     def mutate_and_get_payload(root, info, **input):
         procmanual = Procmanual(
@@ -136,10 +127,93 @@ class ProcmanualDeleteMutation(relay.ClientIDMutation):
         procmanual.delete()
         return ProcmanualDeleteMutation(procmanual=None)
 
+class SiteCreateMutation(relay.ClientIDMutation):
+    class Input:
+        site = graphene.String(required=True)
+    site = graphene.Field(SiteNode)
+    # @login_required
+    def mutate_and_get_payload(root, info, **input):
+        site = Site(
+            site = input.get('site'),
+        )
+        site.save()
+        return SiteCreateMutation(site=site)
+
+class SiteUpdateMutation(relay.ClientIDMutation):
+    class Input:
+        id = graphene.ID(required=True) 
+        site = graphene.String(required=True) 
+        # check_cmd = graphene.List(graphene.String, required=True)
+    site = graphene.Field(SiteNode)   
+    # @login_required
+    def mutate_and_get_payload(root, info, **input):
+        site = Site(
+            id = from_global_id(input.get('id'))[1],
+        )        
+        site.site = input.get('site')
+        site.save()
+        return SiteUpdateMutation(site=site)
+
+class SiteDeleteMutation(relay.ClientIDMutation):
+    class Input:
+        id = graphene.ID(required=True)
+    site = graphene.Field(SiteNode)
+    # @login_required
+    def mutate_and_get_payload(root, info, **input):
+        site = Site(
+            id=from_global_id(input.get("id"))[1]
+        )
+        site.delete()
+        return SiteDeleteMutation(site=None)    
+
+
+class RankCreateMutation(relay.ClientIDMutation):
+    class Input:
+        rank = graphene.String(required=True)
+    rank = graphene.Field(RankNode)
+    # @login_required
+    def mutate_and_get_payload(root, info, **input):
+        rank = Rank(
+            rank = input.get('rank'),
+        )
+        rank.save()
+        return RankCreateMutation(rank=rank)
+
+class RankUpdateMutation(relay.ClientIDMutation):
+    class Input:
+        id = graphene.ID(required=True) 
+        rank = graphene.String(required=True) 
+        # check_cmd = graphene.List(graphene.String, required=True)
+    rank = graphene.Field(RankNode)   
+    # @login_required
+    def mutate_and_get_payload(root, info, **input):
+        rank = Rank(
+            id = from_global_id(input.get('id'))[1],
+        )        
+        rank.rank = input.get('rank')
+        rank.save()
+        return RankUpdateMutation(rank=rank)
+
+class RankDeleteMutation(relay.ClientIDMutation):
+    class Input:
+        id = graphene.ID(required=True)
+    rank = graphene.Field(RankNode)
+    # @login_required
+    def mutate_and_get_payload(root, info, **input):
+        rank = Rank(
+            id=from_global_id(input.get("id"))[1]
+        )
+        rank.delete()
+        return RankDeleteMutation(rank=None) 
 
 
 class Mutation(graphene.ObjectType):
     create_procmanual = ProcmanualCreateMutation.Field()
     update_procmanual = ProcmanualUpdateMutation.Field()
     delete_procmanual = ProcmanualDeleteMutation.Field()
-
+    create_site = SiteCreateMutation.Field()
+    update_site = SiteUpdateMutation.Field()
+    delete_site = SiteDeleteMutation.Field()
+    create_rank = RankCreateMutation.Field()
+    update_rank = RankUpdateMutation.Field()
+    delete_rank = RankDeleteMutation.Field()

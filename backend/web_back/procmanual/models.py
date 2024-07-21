@@ -4,10 +4,10 @@ import json
 
 # Create your models here.
 class Site(models.Model):
-    site_name = models.CharField(max_length=200)
+    site = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.site_name   
+        return self.site
 
 class Rank(models.Model):
     rank = models.CharField(max_length=10)
