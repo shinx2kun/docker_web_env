@@ -3,15 +3,25 @@ https://qiita.com/greenteabiscuit/items/c40ba038703c9f33499b
 
 ◼️ 初期構築に必要なコマンド
 docker exec -it web_back bashにて以下のコマンドが必要
---- gitにプロジェクトやアプリが作成されていない時
+--- gitにプロジェクトやアプリが作成されていない時のみ
 django-admin startproject config .
 python manage.py startapp todo
 --- その後に必要な作業(これは最初の人が一度だけ実施すれば、その後他の人はgitのファイルとれば不要)
 python manage.py makemigrations
 python manage.py migrate
-python manage.py collectstatic
 python manage.py createsuperuser
+--- これは必要ならやって・・・
+python manage.py collectstatic
 
+docker exec -it web_front bashにて以下のコマンドが必要
+--- gitにプロジェクトやアプリが作成されていない時
+npx create-react-app .
+--- パッケージ追加
+yarn add <package>
+--- ↑でaddしたのがpackage.jsonに書かれるので、それに基づいてinstall
+yarn install
+--- 開発サーバーでのreactの立ち上げ(結構待つ)
+npm start
 
 ◼️ env
 

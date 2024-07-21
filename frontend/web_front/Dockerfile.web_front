@@ -1,5 +1,7 @@
-FROM node:14.13.1
+# Nginxの公式image
+FROM node:22.4.1
 
-RUN bash -c yarn upgrade --no-progress --network-timeout 1000000
-# RUN yarn run dev
+RUN yarn install
+RUN yarn upgrade --no-progress --network-timeout 1000000
+RUN apt-get update && apt-get install -y net-tools iproute2
 

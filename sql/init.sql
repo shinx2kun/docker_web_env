@@ -1,3 +1,3 @@
-GRANT ALL PRIVILEGES ON test_procedureManual.* TO 'user'@'%';
+GRANT ALL PRIVILEGES ON test_procmanual.* TO 'user'@'%';
 
 FLUSH PRIVILEGES;

@@ -44,11 +44,11 @@ services:
       context: ./frontend/web_front/.
       dockerfile: Dockerfile.web_front
     volumes:
-      - ./frontend/web_front:/home/app/frontend
+      - ./frontend/web_front/app:/home/frontend/app
     tty: true
     ports:
       - 3000:3000
-    working_dir: /home/app/frontend
+    working_dir: /home/frontend/app
     networks:
       - frontend_network
   nginx_front:
@@ -73,7 +73,7 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: procedureManual
+      MYSQL_DATABASE: procmanual
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       TZ: 'Asia/Tokyo'

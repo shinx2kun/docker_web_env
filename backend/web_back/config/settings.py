@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'graphene_django',
     # local
-    'procedureManual.apps.ProceduremanualConfig',
+    'procmanual.apps.ProcmanualConfig',
 ]
 
 MIDDLEWARE = [
@@ -99,9 +99,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'procedureManual',
-        'USER': 'user',
-        'PASSWORD': 'password',
+        'NAME': 'procmanual',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': 'mysql',
         'PORT': '3306',
     }
@@ -144,7 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ja'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
@@ -191,4 +191,4 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 
-# CSRF_FAILURE_VIEW='procedureManual.views.csrf_failure'
+# CSRF_FAILURE_VIEW='procmanual.views.csrf_failure'
