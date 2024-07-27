@@ -17,12 +17,12 @@ class Rank(models.Model):
 
 class Procmanual(models.Model):
     title = models.CharField(max_length=200)
-    # body = models.TextField()
 
     site = models.ForeignKey(Site, related_name='procmanual', on_delete=models.CASCADE, blank=True, null=True)
     rank = models.ForeignKey(Rank, related_name='procmanual', on_delete=models.CASCADE, blank=True, null=True)
 
     # check_cmd = models.JSONField(default=list)
+    check_cmd = models.JSONField(default=dict, null=True, blank=True)
 
     created_date = models.DateTimeField(blank=True, null=True)
     published_date = models.DateTimeField(blank=True, null=True)
