@@ -23,6 +23,9 @@ yarn install
 --- 開発サーバーでのreactの立ち上げ(結構待つ)
 npm start
 
+--- reactをドラックアンドドロップでいじる
+react-beautiful-dnd
+
 ◼️ env
 
 ├── backend

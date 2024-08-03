@@ -1,0 +1,31 @@
+
+class Procmanual(models.Model):
+    title = models.CharField(max_length=200)
+
+    site = models.ForeignKey(Site, related_name='procmanual', on_delete=models.CASCADE, blank=True, null=True)
+    rank = models.ForeignKey(Rank, related_name='procmanual', on_delete=models.CASCADE, blank=True, null=True)
+    # check_cmd = models.JSONField(default=list)
+    # check_cmd = models.JSONField(default=dict, null=True, blank=True)
+    created_date = models.DateTimeField(blank=True, null=True)
+    published_date = models.DateTimeField(blank=True, null=True)
+
+    check_cmd = models.JSONField(default=list)
+    check_list = models.JSONField(default=list)
+    execute_cmd = models.JSONField(default=list)
+
+    def __str__(self):
+        return self.title
+
+
+check_cmd, check_list, execute_cmdは、フロントにそれぞれのボタンがあり、ボタン(create_check_cmd, create_check_list, create_execute_cmdは、フロントにそれぞれのボタンがあり、ボタン)を押すと中身を入力する枠が生成される。
+
+
+以下フロント側でのユーザー実施例。
+1.create_check_cmdで枠を作り、そこにいくつか文章を入力。
+2.create_check_listで枠を作り、そこにいくつか文章を入力。
+3.またcreate_check_cmdで枠を作り、そこにいくつか文章を入力。
+4.最後にcreate_execute_cmdで枠を作り、そこに幾つかの文章を入力
+5.4で作成したexecute_cmdの枠を、ドラックアンドドロップで3のcheck_cmdの枠の上に持っていく
+
+上記のような動きをさせたい。
+

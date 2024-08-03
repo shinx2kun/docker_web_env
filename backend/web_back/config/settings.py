@@ -190,5 +190,9 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # フロントエンドのURL
+]
+
 
 # CSRF_FAILURE_VIEW='procmanual.views.csrf_failure'

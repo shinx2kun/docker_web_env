@@ -15,10 +15,12 @@ class JSONFilter(django_filters.CharFilter):
     def filter(self, qs, value):
         if not value:
             return qs
-        return qs.filter(check_cmd__icontains=value)
+        return qs.filter(**{f"{self.field_name}__icontains": value})
 
 class ProcmanualFilter(django_filters.FilterSet):
     check_cmd = JSONFilter(field_name='check_cmd', lookup_expr='icontains')
+    check_list = JSONFilter(field_name='check_list', lookup_expr='icontains')
+    execute_cmd = JSONFilter(field_name='execute_cmd', lookup_expr='icontains')
     class Meta:
         model = Procmanual
         fields = {
@@ -33,7 +35,6 @@ class ProcmanualFilter(django_filters.FilterSet):
                 'filter_class': JSONFilter,
             },
         }
-
 
 class ProcmanualNode(DjangoObjectType):
     class Meta:
@@ -67,7 +68,6 @@ class Query(graphene.ObjectType):
     all_sites = DjangoFilterConnectionField(SiteNode)
     rank = graphene.Field(RankNode, id=graphene.NonNull(graphene.ID))
     all_ranks = DjangoFilterConnectionField(RankNode)
-    # check_cmd = 
     def resolve_procmanual(self, info, **kwargs):
         id = kwargs.get("id")
         if id is not None:
@@ -94,6 +94,8 @@ class ProcmanualCreateMutation(relay.ClientIDMutation):
         site = graphene.ID(required=True)
         rank = graphene.ID(required=True)
         check_cmd = graphene.JSONString()
+        check_list = graphene.JSONString()
+        execute_cmd = graphene.JSONString()
     procmanual = graphene.Field(ProcmanualNode)
     # @login_required
     def mutate_and_get_payload(root, info, **input):
@@ -103,7 +105,9 @@ class ProcmanualCreateMutation(relay.ClientIDMutation):
             title = input.get('title'),
             site = Site.objects.get(id=site_id),
             rank = Rank.objects.get(id=rank_id),
-            check_cmd=input.get('check_cmd'),
+            check_cmd=input.get('check_cmd', {}),
+            check_list=input.get('check_list', {}),
+            execute_cmd=input.get('execute_cmd', {}),
             created_date = input.get('created_date', timezone.now()),
         )
         procmanual.save()
@@ -116,7 +120,9 @@ class ProcmanualUpdateMutation(relay.ClientIDMutation):
         site = graphene.ID(required=True)
         rank = graphene.ID(required=True)
         created_date = graphene.DateTime(required=True)
-        check_cmd = graphene.JSONString()
+        check_cmd = graphene.JSONString(required=True)
+        check_list = graphene.JSONString(required=True)
+        execute_cmd = graphene.JSONString(required=True)
         
     procmanual = graphene.Field(ProcmanualNode)   
     # @login_required
@@ -130,6 +136,8 @@ class ProcmanualUpdateMutation(relay.ClientIDMutation):
         procmanual.site = Site.objects.get(id=site_id)
         procmanual.rank = Rank.objects.get(id=rank_id)
         procmanual.check_cmd = input.get('check_cmd')
+        procmanual.check_list = input.get('check_list')
+        procmanual.execute_cmd = input.get('execute_cmd')
         procmanual.created_date = input.get('created_date')
         procmanual.published_date = input.get('published_date', timezone.now())
         procmanual.save()

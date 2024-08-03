@@ -21,14 +21,17 @@ class Procmanual(models.Model):
     site = models.ForeignKey(Site, related_name='procmanual', on_delete=models.CASCADE, blank=True, null=True)
     rank = models.ForeignKey(Rank, related_name='procmanual', on_delete=models.CASCADE, blank=True, null=True)
 
-    # check_cmd = models.JSONField(default=list)
-    check_cmd = models.JSONField(default=dict, null=True, blank=True)
-
     created_date = models.DateTimeField(blank=True, null=True)
     published_date = models.DateTimeField(blank=True, null=True)
+
+    check_cmd = models.JSONField(default=dict, blank=True)
+    check_list = models.JSONField(default=dict, blank=True)
+    execute_cmd = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
         return self.title
     
+
+
 
 

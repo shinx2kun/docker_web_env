@@ -1,0 +1,14 @@
+.announcement{
+    padding: 40px;
+}
+
+.grid{
+    padding-right: 20px;
+}
+
+.atag{
+    text-decoration: none;
+}
+a:link, a:visited, a:hover, a:active {
+    color: black;
+}
